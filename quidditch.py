@@ -19,8 +19,17 @@ class quidditch(viz.EventClass):
 		mat.postTrans(0,20,50)
 		self.view.setMatrix(mat)
 		viz.EventClass.__init__(self)
+		self.callback(viz.KEYDOWN_EVENT,self.onKeyDown)
 		
-		self.quadribol = Model('quadribol'+os.sep+'model.dae')
+		
+		# avatar's x,z location in maze and its rotation angle
+		self.theta = 0
+		self.alpha = 0
+		self.x = 10
+		self.z = 15
+		self.y = 40
+		
+		self.quadribol = Model('quadribol'+os.sep+'model.osgb')
 		#self.snitch = Model('snitch'+os.sep+'scene.gltf')
 		self.broom = Model('broom'+os.sep+'source'+os.sep+'broom.obj')
 		
@@ -91,7 +100,30 @@ class quidditch(viz.EventClass):
 #		s.texture(self.mount)
 		
 		
+	# Key pressed down event code.
+	def onKeyDown(self,key):
+		if (key == viz.KEY_RIGHT):
+			self.theta = self.theta + 10
+		if (key == viz.KEY_LEFT):
+			self.theta = self.theta - 10
+		if (key == viz.KEY_DOWN):
+			self.alpha = self.alpha - 10
+		if (key == viz.KEY_UP):
+			self.alpha = self.alpha + 10
+		if (key == ' '):
+			self.x =  self.x + math.sin(math.radians(self.theta))
+			self.z = self.z + math.cos(math.radians(self.theta))
+			
 		
+		self.transform()
+		
+	def transform(self):
+		m=viz.Matrix()
+		m.postScale(.005, .005, .005)
+		m.postAxisAngle(1,0,0,self.alpha)
+		m.postAxisAngle(0,1,0,self.theta)
+		m.postTrans(self.x, self.y, self.z)
+		self.broom.getNode().setMatrix(m)
 		
 		
 		
