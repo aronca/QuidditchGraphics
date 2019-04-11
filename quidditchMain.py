@@ -10,6 +10,7 @@ viz.window.setSize( 640*1.5, 480*1.5 )
 viz.window.setName( "Quidditch Practice" )
 
 # get graphics window
+
 window = viz.MainWindow
 # setup viewing volume
 
