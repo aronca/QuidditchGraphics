@@ -18,7 +18,7 @@ window = viz.MainWindow
 viz.MainWindow.clearcolor( [0,0,0] ) 
 
 # allows mouse to rotate, translate, and zoom in/out on object
-pivotNav = vizcam.PivotNavigate()
+#pivotNav = vizcam.PivotNavigate()
 
 c = quidditch()
 
