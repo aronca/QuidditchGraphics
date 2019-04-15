@@ -21,7 +21,7 @@ class quidditch(viz.EventClass):
 		
 		
 		# avatar's x,z location in space and its rotation angle
-		self.theta = -90
+		self.theta = 0
 		self.alpha = 0
 		self.x = 10
 		self.z = 45
@@ -34,11 +34,11 @@ class quidditch(viz.EventClass):
 		#create models
 		self.quadribol = Model('quadribol'+os.sep+'model.osgb')
 		self.snitch = Model('snitch'+os.sep+'model.dae')
-		self.broom = Model('broom'+os.sep+'source'+os.sep+'broom.obj')
+		self.broom =  vizshape.addCylinder( height=10, radius=.3 ) #Model('broom'+os.sep+'source'+os.sep+'broom.obj')
 		
 		#scale models
-		self.broom.setScale(.001)
-		self.broom.setLocation(self.broom.getX()+10,self.broom.getY()+15,self.broom.getZ()+40)
+		#self.broom.setScale(.001)
+		#self.broom.setLocation(self.broom.getX()+10,self.broom.getY()+15,self.broom.getZ()+40)
 		self.snitch.setScale(2)
 		self.snitch.setLocation(self.snitch.getX(),self.snitch.getY()+15,self.snitch.getZ()+50)
 		
@@ -90,29 +90,38 @@ class quidditch(viz.EventClass):
 		self.alpha += self.dalpha
 		self.theta += self.dtheta
 		if (self.moving):
-			self.x = self.x + .75*math.sin(math.radians(self.theta))
-			self.z = self.z + .75*math.cos(math.radians(self.theta))
-			self.y = self.y - .75*math.sin(math.radians(self.alpha))
+			self.x = self.x +  .75*math.sin(math.radians(self.theta))*math.cos(math.radians(self.alpha))  #.75*math.sin(math.radians(self.theta))
+			self.z = self.z + .75*math.cos(math.radians(self.theta))*math.cos(math.radians(self.alpha)) #.75*math.cos(math.radians(self.theta))
+			self.y = self.y + .75*math.sin(math.radians(-self.alpha))
+			dx=   .75*math.sin(math.radians(self.theta))*math.cos(math.radians(self.alpha))  #.75*math.sin(math.radians(self.theta))
+			dz = .75*math.cos(math.radians(self.theta))*math.cos(math.radians(self.alpha)) #.75*math.cos(math.radians(self.theta))
+			dy =  .75*math.sin(math.radians(-self.alpha))
+			print("alpha = " + str(self.alpha))
+			print("theta = " + str(self.theta))
+			print( str(dx) + "  " + str(dy) + "  " + str(dz) )
 		self.transform()
 			
 	def transform(self):
 		#transform broom
 		m=viz.Matrix()
-		m.postScale(.005, .005, .005)
+		#m.postScale(.005, .005, .005)
+		m.postAxisAngle(1,0,0,90) #extra for cylinder
 		m.postAxisAngle(1,0,0,self.alpha)
 		m.postAxisAngle(0,1,0,self.theta)
 		m.postTrans(self.x, self.y, self.z)
-		self.broom.getNode().setMatrix(m)
+		#self.broom.getNode().setMatrix(m)
+		self.broom.setMatrix(m)
 		
 		#transform view
-		dx =  3.0*(math.sin( math.radians( self.theta ) ))
-		dz =  3.0*(math.cos( math.radians( self.theta ) ))
-		dy =  (math.sin(math.radians(self.alpha)))
+		dx =  0.5*(math.sin( math.radians( self.theta ) ))
+		dz =  0.5*(math.cos( math.radians( self.theta ) ))
+		dy =  0.5*(math.sin(math.radians(-self.alpha)))
 		view = viz.MainView
 		mat = viz.Matrix()
+		mat.postTrans(0,0.75,0);
 		mat.postAxisAngle(1,0,0,self.alpha)
 		mat.postAxisAngle(0,1,0,self.theta)
-		mat.postTrans(self.x-dx,self.y+dy,self.z-dz)
+		mat.postTrans(self.x-dx,self.y-dy,self.z-dz)
 		view.setMatrix(mat)	
 		
 	def snitchPath(self, pathNum):
@@ -140,3 +149,9 @@ class quidditch(viz.EventClass):
 
 		#Play the path.
 		self.path.play()
+
+
+		
+		
+	
+		
