@@ -39,7 +39,7 @@ class quidditch(viz.EventClass):
 		#scale models
 		#self.broom.setScale(.001)
 		#self.broom.setLocation(self.broom.getX()+10,self.broom.getY()+15,self.broom.getZ()+40)
-		self.snitch.setScale(2)
+		self.snitch.setScale(.1)
 		self.snitch.setLocation(self.snitch.getX(),self.snitch.getY()+15,self.snitch.getZ()+50)
 		
 		
@@ -90,15 +90,9 @@ class quidditch(viz.EventClass):
 		self.alpha += self.dalpha
 		self.theta += self.dtheta
 		if (self.moving):
-			self.x = self.x +  .75*math.sin(math.radians(self.theta))*math.cos(math.radians(self.alpha))  #.75*math.sin(math.radians(self.theta))
-			self.z = self.z + .75*math.cos(math.radians(self.theta))*math.cos(math.radians(self.alpha)) #.75*math.cos(math.radians(self.theta))
+			self.x = self.x +  .75*math.sin(math.radians(self.theta))*math.cos(math.radians(self.alpha))  
+			self.z = self.z + .75*math.cos(math.radians(self.theta))*math.cos(math.radians(self.alpha))
 			self.y = self.y + .75*math.sin(math.radians(-self.alpha))
-			dx=   .75*math.sin(math.radians(self.theta))*math.cos(math.radians(self.alpha))  #.75*math.sin(math.radians(self.theta))
-			dz = .75*math.cos(math.radians(self.theta))*math.cos(math.radians(self.alpha)) #.75*math.cos(math.radians(self.theta))
-			dy =  .75*math.sin(math.radians(-self.alpha))
-			print("alpha = " + str(self.alpha))
-			print("theta = " + str(self.theta))
-			print( str(dx) + "  " + str(dy) + "  " + str(dz) )
 		self.transform()
 			
 	def transform(self):
@@ -129,20 +123,23 @@ class quidditch(viz.EventClass):
 		self.path = viz.addAnimationPath()
 
 		#Add control points to the path, along with their time stamp.
-		if (pathNum == 50):
-			self.path.addControlPoint(0,pos=(22,21,25),euler=(90,0,0),scale=(2,2,2))
-			self.path.addControlPoint(3,pos=(-22,21,26),euler=(0,90,0),scale=(.5,.5,.5))
-		elif (pathNum == 51):
-			self.path.addControlPoint(0,pos=(22,21,25),euler=(90,0,0),scale=(2,2,2))
-			self.path.addControlPoint(3,pos=(-22,21,26),euler=(0,90,0),scale=(.5,.5,.5))
-		else:
-			self.path.addControlPoint(0,pos=(22,21,25),euler=(90,0,0))
+		if (pathNum < 3):
+			self.path.addControlPoint(0,pos=(22,31,20),euler=(90,0,0))
 			self.path.addControlPoint(3,pos=(-22,21,26),euler=(0,90,0))
 			self.path.addControlPoint(5,pos=(-22,41,46),euler=(0,0,90))
+			self.path.addControlPoint(6.5,pos=(-10,10,60),euler=(90,0,0))
+			self.path.addControlPoint(8,pos=(12,21,26),euler=(0,90,0))
+			self.path.addControlPoint(10,pos=(42,45,50),euler=(0,0,90))
+			self.path.addControlPoint(11.5,pos=(17,35,25),euler=(0,90,0))
+			self.path.addControlPoint(12,pos=(22,31,20),euler=(90,0,0))
+		else: 
+			pass
 			
 		
-		#Loop the path in a swinging fashion (point A to point B to point A, etc.).
-		self.path.setLoopMode(viz.SWING)
+		#Loop the path to loop back to replay from beginning
+		self.path.setLoopMode(viz.LOOP)
+		self.path.computeTangents()
+		self.path.setTranslateMode(viz.CUBIC_BEZIER)
 
 		#Link the model to a path.
 		self.link = viz.link(self.path,self.snitch.getNode())
