@@ -30,28 +30,20 @@ class quidditch(viz.EventClass):
 		self.dalpha = 0
 		self.moving = False
 		
+		#number of catches made
+		self.catches = 0
+		
 		
 		#create models
 		self.quadribol = Model('quadribol'+os.sep+'model.osgb')
-		self.snitch = Model('snitch'+os.sep+'model.dae')
-		self.broom =  vizshape.addCylinder( height=10, radius=.3 ) #Model('broom'+os.sep+'source'+os.sep+'broom.obj')
-		
-		#scale models
-		#self.broom.setScale(.001)
-		#self.broom.setLocation(self.broom.getX()+10,self.broom.getY()+15,self.broom.getZ()+40)
-		self.snitch.setScale(.1)
-		self.snitch.setLocation(self.snitch.getX(),self.snitch.getY()+15,self.snitch.getZ()+50)
+		self.snitch	= vizshape.addSphere(radius=0.5, slices=20, stacks=20)
+		self.broom =  vizshape.addCylinder( height=10, radius=.3 )
 		
 		
 		#texture mapping on sky cube for background
 		sky = viz.add(viz.ENVIRONMENT_MAP,'mountsky\mount.jpg')
 		skybox = viz.add('skydome.dlc')
 		skybox.texture(sky)
-		
-		
-		#choose a snitch path
-		pathNum = random.randint(0,3)
-		self.snitchPath(pathNum)
 		
 		#lighting
 		self.mylight=viz.addLight()
@@ -64,6 +56,25 @@ class quidditch(viz.EventClass):
 		#self.snitch.specular
 		
 		
+		#choose a snitch path
+		pathNum = random.randint(0,3)
+		self.snitchPath(pathNum)
+		
+		#collision detection
+		self.broom.collideSphere(radius=10)
+		self.broom.disable( viz.DYNAMICS )
+		self.snitch.collideMesh()
+		self.snitch.disable( viz.DYNAMICS )
+		self.snitch.enable(viz.COLLIDE_NOTIFY)
+		self.callback(viz.COLLIDE_BEGIN_EVENT, self.onCollideBegin)
+		
+		
+	#increase number of catches when collision occurs
+	def onCollideBegin(self, e):
+		self.catches += 1
+		print("catches: " + str(self.catches))
+	
+	
 	# Key pressed down event code.
 	def onKeyDown(self,key):
 		if (key == viz.KEY_RIGHT):
@@ -142,7 +153,7 @@ class quidditch(viz.EventClass):
 		self.path.setTranslateMode(viz.CUBIC_BEZIER)
 
 		#Link the model to a path.
-		self.link = viz.link(self.path,self.snitch.getNode())
+		self.link = viz.link(self.path,self.snitch)
 
 		#Play the path.
 		self.path.play()

@@ -21,6 +21,8 @@ viz.MainWindow.clearcolor( [0,0,0] )
 #pivotNav = vizcam.PivotNavigate()
 viz.mouse(viz.OFF)
 
+viz.phys.enable()
+
 c = quidditch()
 
 # render the scene in the window
