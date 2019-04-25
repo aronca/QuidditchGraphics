@@ -44,6 +44,15 @@ class quidditch(viz.EventClass):
 		sky = viz.add(viz.ENVIRONMENT_MAP,'mountsky\mount.jpg')
 		skybox = viz.add('skydome.dlc')
 		skybox.texture(sky)
+
+		#texture mapping for broom
+		self.woodTex = viz.addTexture('woodtex.jpg')
+		self.broom.texture(self.woodTex)
+
+		#score message displayed on the screen
+		self.t = viz.addText("Score: " + str(self.catches), viz.SCREEN, pos=[0,0.8,0])
+		self.t.color(0.4,0.8,0.1)
+
 		
 		#lighting
 		self.mylight=viz.addLight()
@@ -72,7 +81,7 @@ class quidditch(viz.EventClass):
 	#increase number of catches when collision occurs
 	def onCollideBegin(self, e):
 		self.catches += 1
-		print("catches: " + str(self.catches))
+		#print("catches: " + str(self.catches))
 	
 	
 	# Key pressed down event code.
@@ -105,6 +114,14 @@ class quidditch(viz.EventClass):
 			self.z = self.z + .75*math.cos(math.radians(self.theta))*math.cos(math.radians(self.alpha))
 			self.y = self.y + .75*math.sin(math.radians(-self.alpha))
 		self.transform()
+		
+                #Displays on the screen the score that the player scores by catching the snitch
+		m = viz.Matrix()
+		m.postTrans(-100,-100,0)
+		self.t.setMatrix(m)
+		#self.text2D.message("Score: " + str(self.catches))
+		self.t = viz.addText("Score: " + str(self.catches), viz.SCREEN, pos=[0,0.8,0])
+		self.t.color(0.4,0.8,0.1)
 			
 	def transform(self):
 		#transform broom
