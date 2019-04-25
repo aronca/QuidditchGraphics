@@ -80,8 +80,7 @@ class quidditch(viz.EventClass):
 		
 		viz.playSound('Harry_Potter_Theme.wav')
 		
-		
-	#increase number of catches when collision occurs
+#increase number of catches when collision occurs
 	def onCollideBegin(self, e):
 		self.catches += 1
 		viz.playSound('ball_sound.wav')
@@ -127,7 +126,8 @@ class quidditch(viz.EventClass):
 		self.text = viz.addText("Score: " + str(self.catches), viz.SCREEN, pos=[0.01,0.92,0])
 		self.text.setBackdrop(viz.BACKDROP_RIGHT_BOTTOM)
 		self.text.color(0.95,0.95,0.95)
-			
+		
+		
 	def transform(self):
 		#transform broom
 		m=viz.Matrix()
@@ -156,6 +156,7 @@ class quidditch(viz.EventClass):
 		self.path = viz.addAnimationPath()
 
 		#Add control points to the path, along with their time stamp.
+
 		if (pathNum < 4):
 			self.path.addControlPoint(0,pos=(22,31,20),euler=(90,0,0))
 			self.path.addControlPoint(3,pos=(-22,21,26),euler=(0,90,0))
@@ -173,7 +174,7 @@ class quidditch(viz.EventClass):
 		self.path.setLoopMode(viz.LOOP)
 		self.path.computeTangents()
 		self.path.setTranslateMode(viz.CUBIC_BEZIER)
-
+		
 		#Link the model to a path.
 		self.link = viz.link(self.path,self.snitch)
 

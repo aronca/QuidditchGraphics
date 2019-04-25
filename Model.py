@@ -19,7 +19,7 @@ class Model():
 		self.y = 0
 		self.z = 0
 		# model's scale
-		self.s = 1
+		self.s = 1.0
 		# model's rotation about the Y axis (in degrees)
 		self.yrot = 0
 		self.xrot = 0
