@@ -27,17 +27,3 @@ c = quidditch()
 
 # render the scene in the window
 viz.go()
-
-
-
-
-#960,720
-
-
-
-
-
-
-
-
-viz.go()

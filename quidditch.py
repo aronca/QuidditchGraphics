@@ -37,7 +37,7 @@ class quidditch(viz.EventClass):
 		#create models
 		self.quadribol = Model('quadribol'+os.sep+'model.osgb')
 		self.snitch	= vizshape.addSphere(radius=0.5, slices=20, stacks=20, axis=vizshape.AXIS_Y, color=[0.7,0.5,0])
-		self.broom =  vizshape.addCylinder( height=10, radius=.3 )
+		self.broom =  vizshape.addCylinder( height=10, radius=.25 )
 		
 		
 		#texture mapping on sky cube for background
@@ -49,11 +49,12 @@ class quidditch(viz.EventClass):
 		self.woodTex = viz.addTexture('woodtex.jpg')
 		self.broom.texture(self.woodTex)
 
+
 		#score message displayed on the screen
-		self.text = viz.addText("Score: " + str(self.catches), viz.SCREEN, pos=[0.01,0.92,0])
+		self.text = viz.addText('Score: ' + str(self.catches), viz.SCREEN, pos=[0.01,0.92,0])
 		self.text.setBackdrop(viz.BACKDROP_RIGHT_BOTTOM)
 		self.text.color(0.95,0.95,0.95)
-
+		self.text.disable(viz.LIGHTING)
 		
 		#lighting
 		self.mylight=viz.addLight()
@@ -80,11 +81,19 @@ class quidditch(viz.EventClass):
 		
 		viz.playSound('Harry_Potter_Theme.wav')
 		
-#increase number of catches when collision occurs
+	#increase number of catches when collision occurs
 	def onCollideBegin(self, e):
 		self.catches += 1
 		viz.playSound('ball_sound.wav')
-		#print("catches: " + str(self.catches))
+		
+		#Displays on the screen the score that the player scores by catching the snitch		
+		m = viz.Matrix()
+		m.postTrans(-100,-100,0)
+		self.text.setMatrix(m)
+		self.text = viz.addText('Score: ' + str(self.catches), viz.SCREEN, pos=[0.01,0.92,0])
+		self.text.setBackdrop(viz.BACKDROP_RIGHT_BOTTOM)
+		self.text.color(0.95,0.95,0.95)
+		self.text.disable(viz.LIGHTING)
 	
 	
 	# Key pressed down event code.
@@ -117,15 +126,6 @@ class quidditch(viz.EventClass):
 			self.z = self.z + .75*math.cos(math.radians(self.theta))*math.cos(math.radians(self.alpha))
 			self.y = self.y + .75*math.sin(math.radians(-self.alpha))
 		self.transform()
-		
-		#Displays on the screen the score that the player scores by catching the snitch
-		m = viz.Matrix()
-		m.postTrans(-100,-100,0)
-		self.text.setMatrix(m)
-		#self.text2D.message("Score: " + str(self.catches))
-		self.text = viz.addText("Score: " + str(self.catches), viz.SCREEN, pos=[0.01,0.92,0])
-		self.text.setBackdrop(viz.BACKDROP_RIGHT_BOTTOM)
-		self.text.color(0.95,0.95,0.95)
 		
 		
 	def transform(self):
